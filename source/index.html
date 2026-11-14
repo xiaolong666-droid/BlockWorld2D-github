@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2D方块世界</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    #game { width: 100vw; height: 100vh; }
+    canvas { image-rendering: pixelated; display: block; }
+  </style>
+  <script>
+    (function () {
+      // 程序化生成 16×16 草方块 favicon（零外部素材）
+      var c = document.createElement('canvas');
+      c.width = 16; c.height = 16;
+      var x = c.getContext('2d');
+      x.fillStyle = '#7a5230'; x.fillRect(0, 0, 16, 16);
+      x.fillStyle = '#5da331'; x.fillRect(0, 0, 16, 5);
+      for (var i = 0; i < 48; i++) {
+        x.fillStyle = Math.random() < 0.5 ? 'rgba(0,0,0,0.14)' : 'rgba(255,255,255,0.10)';
+        x.fillRect((Math.random() * 16) | 0, (Math.random() * 16) | 0, 1, 1);
+      }
+      var l = document.createElement('link');
+      l.rel = 'icon'; l.href = c.toDataURL();
+      document.head.appendChild(l);
+
+      // 屏蔽浏览器默认行为：右键菜单
+      // 注意：空格/方向键不能在此处 preventDefault —— Phaser 会丢弃已阻止默认行为的按键，
+      // 页面滚动屏蔽由游戏内 addKeyCapture 处理（见 GameScene）。
+      // 这里只处理 Ctrl+A/D/S（全选/书签/保存）：阻止默认后补发一份克隆事件给游戏，
+      // 保证疾跑(Ctrl+方向)时游戏仍能收到 A/D 按键。
+      window.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+      function handleKey(e, type) {
+        if (e.__bwClone) return;
+        if (e.ctrlKey && ['KeyA', 'KeyD', 'KeyS'].indexOf(e.code) > -1) {
+          e.preventDefault();
+          var c = new KeyboardEvent(type, {
+            key: e.key, code: e.code, keyCode: e.keyCode, which: e.keyCode,
+            bubbles: true, cancelable: true
+          });
+          c.__bwClone = true;
+          window.dispatchEvent(c);
+        }
+      }
+      window.addEventListener('keydown', function (e) { handleKey(e, 'keydown'); }, true);
+      window.addEventListener('keyup', function (e) { handleKey(e, 'keyup'); }, true);
+    })();
+  </script>
+</head>
+<body>
+  <div id="game"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

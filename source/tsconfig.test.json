@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "outDir": ".tmp-test",
+    "rootDir": ".",
+    "types": []
+  },
+  "include": ["src/config.ts", "src/blocks.ts", "src/systems/inventory.ts", "src/systems/crafting.ts", "src/systems/survival.ts", "src/systems/save.ts", "src/world/world.ts", "src/world/worldgen.ts", "tests/*.ts"]
+}
